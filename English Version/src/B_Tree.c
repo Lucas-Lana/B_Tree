@@ -25,14 +25,14 @@ static void insertion_page(Pointer Page, reg Register, Pointer Right_Brother) {
     // Search for the correct position to insert the record
     while (position_not_found == TRUE) {
         // Check if the record should be inserted at the end of the page
-        if (Register >= Page->reg[amount_aux - 1]) {
+        if (Register >= Page->reg[amount_aux-1]) {
             position_not_found = FALSE; // Record found its position, exit loop
             break;
         }
 
         // Shift records and pointers to the right to make space for the new record
-        Page->reg[amount_aux] = Page->reg[amount_aux - 1];
-        Page->downward[amount_aux + 1] = Page->downward[amount_aux];
+        Page->reg[amount_aux] = Page->reg[amount_aux-1];
+        Page->downward[amount_aux+1] = Page->downward[amount_aux];
         amount_aux--;
 
         // Check if the end of the page is reached
@@ -46,7 +46,7 @@ static void insertion_page(Pointer Page, reg Register, Pointer Right_Brother) {
 
     // Insert the record and update the pointer to the right brother
     Page->reg[amount_aux] = Register;
-    Page->downward[amount_aux + 1] = Right_Brother;
+    Page->downward[amount_aux+1] = Right_Brother;
 
     // Increment the number of records in the page
     Page->amount++;
@@ -54,7 +54,7 @@ static void insertion_page(Pointer Page, reg Register, Pointer Right_Brother) {
 
 
 // Function to insert a record into the B-tree
-static void insertion_primal(reg Register, Pointer Page, short* Addition, reg* Register_Return, Pointer* Page_Return) {
+void insertion_primal(reg Register, Pointer Page, short* Addition, reg* Register_Return, Pointer* Page_Return) {
     long j;
     long index = 1;
     Pointer temp_page;
@@ -68,19 +68,19 @@ static void insertion_primal(reg Register, Pointer Page, short* Addition, reg* R
     }
 
     // Search for the correct position to insert the record in the current page
-    while (index < Page->amount && Register > Page->reg[index - 1]) {
+    while (index < Page->amount && Register > Page->reg[index-1]) {
         index ++;
     }
 
     // Check if the record to be inserted is already present in the page
-    if (Register == Page->reg[index - 1]) {
+    if (Register == Page->reg[index-1]) {
         printf("ERROR: Register already in the tree\n");
         *Addition = FALSE; // The record is already in the tree, set the flag to indicate no insertion
         return;
     }
 
     // If the record is less than the current record, adjust the index
-    if (Register < Page->reg[index - 1]) {
+    if (Register < Page->reg[index-1]) {
         index --;
     }
 
@@ -106,7 +106,7 @@ static void insertion_primal(reg Register, Pointer Page, short* Addition, reg* R
 
     // Perform the splitting based on the insertion index
     if (index < M + 1) {
-        insertion_page(temp_page, Page->reg[MM - 1], Page->downward[MM]); // Insert the record into the temporary page
+        insertion_page(temp_page, Page->reg[MM-1], Page->downward[MM]); // Insert the record into the temporary page
         Page->amount --;
         insertion_page(Page, *Register_Return, *Page_Return); // Insert the new record into the current page
     }
@@ -117,15 +117,14 @@ static void insertion_primal(reg Register, Pointer Page, short* Addition, reg* R
 
     // Move the remaining records and pointers to the temporary page
     for (j = M + 2; j <= MM; j++) {
-        insertion_page(temp_page, Page->reg[j - 1], Page->downward[j]);
+        insertion_page(temp_page, Page->reg[j-1], Page->downward[j]);
     }
 
     Page->amount = M; // Update the number of records in the current page
-    temp_page->downward[0] = Page->downward[M + 1]; // Update the pointer to the right brother of the temporary page
+    temp_page->downward[0] = Page->downward[M+1]; // Update the pointer to the right brother of the temporary page
     *Register_Return = Page->reg[M]; // Return the median record from the current page
     *Page_Return = temp_page; // Return the temporary page as the new right brother
 }
-
 
 // Function to insert a record into the B-tree
 void insertion(reg Register, Pointer* Page) {
@@ -357,14 +356,14 @@ static void remove_primal(reg Delete, Pointer* Page, short* Subtract) {
 
 // Function to remove a record from the B-tree (final removal)
 void remove_final(reg Delete, Pointer* Page) {
-    short Substract;
+    short Subtract;
     Pointer aux;
 
     // Call remove_primal function to perform the primal removal of the record
-    remove_primal(Delete, Page, &Substract);
+    remove_primal(Delete, Page, &Subtract);
 
-    // Check if the Substract flag is TRUE and the current page is empty
-    if (Substract == TRUE && (*Page)->amount == 0) {
+    // Check if the Subtract flag is TRUE and the current page is empty
+    if (Subtract == TRUE && (*Page)->amount == 0) {
         // If the current page is empty after removal, remove it from the tree
         aux = *Page;
         *Page = aux->downward[0];
@@ -373,7 +372,7 @@ void remove_final(reg Delete, Pointer* Page) {
 }
 
 // Function to test the B-tree's primal properties
-static void test_primal(Pointer Tree, int Chave, short Right_Brother) {
+static void test_primal(Pointer Tree, int Key, short Right_Brother) {
     int index;
     int predecessor = 0;
 
@@ -382,8 +381,8 @@ static void test_primal(Pointer Tree, int Chave, short Right_Brother) {
         return;
 
     // Check if the leftmost son's key is greater than its father's key (Right_Brother == FALSE)
-    if (Tree->reg[0] > Chave && Right_Brother == FALSE) {
-        printf("ERROR: Son %12d is bigger than father %d\n", Tree->reg[0], Chave);
+    if (Tree->reg[0] > Key && Right_Brother == FALSE) {
+        printf("ERROR: Son %12d is bigger than father %d\n", Tree->reg[0], Key);
         return;
     }
 

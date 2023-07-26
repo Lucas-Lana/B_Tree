@@ -7,7 +7,7 @@
 // Data structure representing the B-tree node
 typedef int reg; // Assuming the keys are of integer type
 
-typedef struct Page* Pointer; // Define a new type 'Pointer' as an alias for a pointer to struct Page
+typedef struct Page* Pointer; // Define a new type 'Pointer' as an alias for a pointer to struct 'Page'
 typedef struct Page {
     short amount; // Number of keys in the node
     reg reg[MM]; // Array to store keys in the node

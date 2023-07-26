@@ -1,6 +1,6 @@
-#include "B_Tree.c"
 #include <stdio.h>
 #include <stdlib.h>
+#include "B_Tree.c"
 
 int main() {
     reg x;

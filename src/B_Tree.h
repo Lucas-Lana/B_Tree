@@ -1,16 +1,20 @@
-#define M 2
-#define MM (M*2)
+// Constants
 #define TRUE 1
 #define FALSE 0
+#define M 2 // Minimum number of keys in a node
+#define MM (M * 2) // Maximum number of keys in a node
 
-typedef int reg;
+// Data structure representing the B-tree node
+typedef int reg; // Assuming the keys are of integer type
 
-typedef struct Page* Pointer;
+typedef struct Page* Pointer; // Define a new type 'Pointer' as an alias for a pointer to struct Page
 typedef struct Page {
-    int amount;
-    reg reg[MM];
-    Pointer downward[MM + 1];
-}Type_Page;
+    short amount; // Number of keys in the node
+    reg reg[MM]; // Array to store keys in the node
+    Pointer downward[MM + 1]; // Array of pointers to child nodes
+} Type_Page;
+
+
 
 
 //Insert functions
